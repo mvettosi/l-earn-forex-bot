@@ -9,6 +9,8 @@ def setup(bot):
 class IdeasCog(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
+        self.ideas_channel = self.bot.get_channel(self.bot.config['ideas_channel'])
+        self.pro_role = self.ideas_channel.guild.get_role(bot.config['pro_role'])
 
     @commands.command()
     async def newtrade(self, context, url=None):
@@ -19,8 +21,14 @@ class IdeasCog(commands.Cog):
                                f'supported at the moment')
         else:
             await context.message.delete()
-            ideas_channel = self.bot.get_channel(self.bot.config['ideas_channel'])
-            new_message = await ideas_channel.send(f'New trade idea from {context.message.author.mention}: {url}')
+            new_message = await self.ideas_channel.send(f'New trade idea from {context.message.author.mention}: {url}')
             await new_message.add_reaction('\N{THUMBS UP SIGN}')
             await new_message.add_reaction('\N{THUMBS DOWN SIGN}')
+
+    @commands.Cog.listener()
+    async def on_reaction_add(self, reaction, user):
+        print(f'Reaction {reaction} received from {user}')
+        if reaction.message.channel == self.ideas_channel and self.pro_role in user.roles:
+            await reaction.remove(user)
+            await user.send('Sorry pal, only Experienced Traders can vote on members ideas!')
 
