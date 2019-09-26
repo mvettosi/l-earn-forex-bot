@@ -27,8 +27,8 @@ class IdeasCog(commands.Cog):
 
     @commands.Cog.listener()
     async def on_reaction_add(self, reaction, user):
-        print(f'Reaction {reaction} received from {user}')
-        if reaction.message.channel == self.ideas_channel and self.pro_role in user.roles:
+        if reaction.message.channel == self.ideas_channel and self.pro_role not in user.roles and self.bot.user != user:
+            print(f'Removing reaction received from {user}')
             await reaction.remove(user)
             await user.send('Sorry pal, only Experienced Traders can vote on members ideas!')
 
