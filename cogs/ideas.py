@@ -13,7 +13,7 @@ class IdeasCog(commands.Cog):
         self.pro_role = self.ideas_channel.guild.get_role(bot.config['pro_role'])
 
     @commands.command()
-    async def newtrade(self, context, url=None):
+    async def newtrade(self, context, url=None, *, args=''):
         if url is None:
             await context.send(f'Looks like you forgot the idea link after the command!')
         elif not re.match(r"https://www\.tradingview\.com/x/.*", url):
@@ -21,7 +21,7 @@ class IdeasCog(commands.Cog):
                                f'supported at the moment')
         else:
             await context.message.delete()
-            new_message = await self.ideas_channel.send(f'New trade idea from {context.message.author.mention}: {url}')
+            new_message = await self.ideas_channel.send(f'New trade idea from {context.message.author.mention}\n{args}\n{url}')
             await new_message.add_reaction('\N{THUMBS UP SIGN}')
             await new_message.add_reaction('\N{THUMBS DOWN SIGN}')
 
