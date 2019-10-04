@@ -25,7 +25,7 @@ class IdeasCog(commands.Cog):
             await new_message.add_reaction('\N{THUMBS UP SIGN}')
             await new_message.add_reaction('\N{THUMBS DOWN SIGN}')
 
-    @commands.Cog.listener()
+    # @commands.Cog.listener()
     async def on_reaction_add(self, reaction, user):
         if reaction.message.channel == self.ideas_channel and self.pro_role not in user.roles and self.bot.user != user:
             print(f'Removing reaction received from {user}')
